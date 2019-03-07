@@ -7,6 +7,7 @@ import android.util.Log
 class MainActivity : AppCompatActivity() {
 
     //https://android.jlelse.eu/android-networking-in-2019-retrofit-with-kotlins-coroutines-aefe82c4d777
+
     val TAG = MainActivity::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {

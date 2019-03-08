@@ -8,6 +8,6 @@ data class Movie(
     val adult: Boolean
 )
 
-data class TmdbMovieResponse(
+data class MovieResponse(
     val results: List<Movie>
 )

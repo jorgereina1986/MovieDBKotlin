@@ -1,8 +1,14 @@
 package com.jorgereina.moviedbkotlin
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import com.jorgereina.moviedbkotlin.service.ApiFactory
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,6 +20,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Log.d(TAG, BuildConfig.TMDB_API_KEY)
+        val movieService = ApiFactory.tmdbApi
+
+        CoroutineScope(Dispatchers.Main).launch {
+            val popularMovieRequest = movieService.getMovies(BuildConfig.TMDB_API_KEY, "batman")
+            try {
+                val response = popularMovieRequest.await()
+                Log.d(TAG, response.results[0].title)
+                hello_tv.text = response.results[0].title
+            } catch (e: Exception) {
+                Log.d(TAG, e.message)
+            } catch (e: HttpException) {
+                Log.d(TAG, e.message)
+            }
+        }
     }
 }

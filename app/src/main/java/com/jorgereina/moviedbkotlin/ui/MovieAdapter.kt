@@ -25,7 +25,6 @@ class MovieAdapter(private val movies: ArrayList<Movie>) : RecyclerView.Adapter<
 
         var movie: Movie = movies[position]
         var path = movie.poster_path
-        path = path.substring(1, path.length)
 
         holder.movieTitle.text = movie.title
         Picasso.get().load(buildUri(path)).into(holder.moviePoster)
@@ -38,13 +37,16 @@ class MovieAdapter(private val movies: ArrayList<Movie>) : RecyclerView.Adapter<
     }
 
     private fun buildUri(path: String): String {
-        //Image url example: https://image.tmdb.org/t/p/w500/kqjL17yufvn9OVLyXYpvtyrFfak.jpg
+        //Image url example: https://image.tmdb.org/t/p/w500    /kqjL17yufvn9OVLyXYpvtyrFfak.jpg
         val SCHEME = "https"
         val AUTHORITY = "image.tmdb.org"
         val PATH_T = "t"
         val PATH_P = "p"
+
+        var tempPath = path
+        tempPath = tempPath.substring(1, tempPath.length)
         var uri: Uri.Builder = Uri.Builder()
-        uri.scheme(SCHEME).authority(AUTHORITY).appendPath(PATH_T).appendPath(PATH_P).appendPath(PictureSize.THUMB.size).appendPath(path)
+        uri.scheme(SCHEME).authority(AUTHORITY).appendPath(PATH_T).appendPath(PATH_P).appendPath(PictureSize.THUMB.size).appendPath(tempPath)
         return uri.build().toString()
     }
 

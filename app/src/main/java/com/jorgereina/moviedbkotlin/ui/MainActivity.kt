@@ -1,11 +1,15 @@
 package com.jorgereina.moviedbkotlin.ui
 
-import android.net.Uri
+import android.app.SearchManager
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.Menu
+import android.widget.SearchView
 import com.jorgereina.moviedbkotlin.BuildConfig
 import com.jorgereina.moviedbkotlin.R
 import com.jorgereina.moviedbkotlin.data.Movie
@@ -33,13 +37,12 @@ class MainActivity : AppCompatActivity() {
         movies_rv.layoutManager = layoutManager
         movies_rv.adapter = adapter
 
-        loadMovies()
     }
 
-    private fun loadMovies() {
+    private fun loadMovies(query: String) {
         val movieService = ApiFactory.tmdbApi
         CoroutineScope(Dispatchers.Main).launch {
-            val popularMovieRequest = movieService.getMoviesAsync(BuildConfig.TMDB_API_KEY, "batman")
+            val popularMovieRequest = movieService.getMoviesAsync(BuildConfig.TMDB_API_KEY, query)
             try {
                 val response = popularMovieRequest.await()
                 movies.addAll(response.results as ArrayList<Movie>)
@@ -50,5 +53,22 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, e.message)
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.options_menu, menu)
+
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        (menu!!.findItem(R.id.search).actionView as SearchView).apply {
+            setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        }
+
+        if (Intent.ACTION_SEARCH == intent.action) {
+            intent.getStringExtra(SearchManager.QUERY)?.also { query ->
+                loadMovies(query)
+            }
+        }
+
+        return super.onCreateOptionsMenu(menu)
     }
 }

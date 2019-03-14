@@ -35,7 +35,6 @@ class MainActivity : AppCompatActivity() {
         adapter = MovieAdapter(movies)
         movies_rv.layoutManager = layoutManager
         movies_rv.adapter = adapter
-
     }
 
 
@@ -57,7 +56,6 @@ class MainActivity : AppCompatActivity() {
                 })
             }
         }
-
         return super.onCreateOptionsMenu(menu)
     }
 }

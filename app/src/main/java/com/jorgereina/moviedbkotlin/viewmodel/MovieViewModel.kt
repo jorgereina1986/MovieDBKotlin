@@ -16,11 +16,7 @@ class MovieViewModel: ViewModel() {
 
     val TAG = MovieViewModel::class.java.simpleName
 
-    private val movies: MutableLiveData<List<Movie>> by lazy {
-        MutableLiveData<List<Movie>>().also {
-//            loadMovies()
-        }
-    }
+    private val movies: MutableLiveData<List<Movie>> = MutableLiveData()
 
     fun getMovies(): LiveData<List<Movie>> {
         return movies

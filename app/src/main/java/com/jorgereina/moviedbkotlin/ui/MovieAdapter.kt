@@ -2,6 +2,7 @@ package com.jorgereina.moviedbkotlin.ui
 
 import android.net.Uri
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,8 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.movie_item.view.*
 
 class MovieAdapter(private val movies: ArrayList<Movie>) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
+
+    val TAG = MovieAdapter::class.java.simpleName
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieAdapter.MovieViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_item, parent, false) as View
@@ -27,26 +30,29 @@ class MovieAdapter(private val movies: ArrayList<Movie>) : RecyclerView.Adapter<
         var path = movie.poster_path
 
         holder.movieTitle.text = movie.title
-        Picasso.get().load(buildUri(path)).into(holder.moviePoster)
+        if (path.isNullOrEmpty()) {
+            holder.moviePoster.setImageResource(R.drawable.ic_movie)
+
+        } else {
+            Picasso.get().load(buildUri(path)).placeholder(R.drawable.ic_movie).into(holder.moviePoster)
+        }
     }
 
     class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
         val movieTitle = view.movie_title_tv!!
         val moviePoster = view.movie_poster_iv!!
     }
 
     private fun buildUri(path: String): String {
-        //Image url example: https://image.tmdb.org/t/p/w500    /kqjL17yufvn9OVLyXYpvtyrFfak.jpg
+        //Image url example: https://image.tmdb.org/t/p/w500/kqjL17yufvn9OVLyXYpvtyrFfak.jpg
         val SCHEME = "https"
         val AUTHORITY = "image.tmdb.org"
         val PATH_T = "t"
         val PATH_P = "p"
+        var newPath = path.substring(1)
 
-        var tempPath = path
-        tempPath = tempPath.substring(1, tempPath.length)
         var uri: Uri.Builder = Uri.Builder()
-        uri.scheme(SCHEME).authority(AUTHORITY).appendPath(PATH_T).appendPath(PATH_P).appendPath(PictureSize.THUMB.size).appendPath(tempPath)
+        uri.scheme(SCHEME).authority(AUTHORITY).appendPath(PATH_T).appendPath(PATH_P).appendPath(PictureSize.THUMB.size).appendPath(newPath)
         return uri.build().toString()
     }
 

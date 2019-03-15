@@ -9,9 +9,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.Menu
-import android.widget.SearchView
+
 import com.jorgereina.moviedbkotlin.R
 import com.jorgereina.moviedbkotlin.data.Movie
 import com.jorgereina.moviedbkotlin.viewmodel.MovieViewModel
@@ -35,6 +36,9 @@ class MainActivity : AppCompatActivity() {
         adapter = MovieAdapter(movies)
         movies_rv.layoutManager = layoutManager
         movies_rv.adapter = adapter
+
+        //TODO: Fix this
+        viewModel.getPopularMovies().observe(this, Observer { popularMovies -> Log.d(TAG, "lagarto: " + popularMovies!![0].title) })
     }
 
 
@@ -48,8 +52,8 @@ class MainActivity : AppCompatActivity() {
 
         if (Intent.ACTION_SEARCH == intent.action) {
             intent.getStringExtra(SearchManager.QUERY)?.also { query ->
-                viewModel.getMovieSearched(query)
-                viewModel.getMovies().observe(this, Observer {
+                viewModel.setSearchQuery(query)
+                viewModel.getSearchMovies().observe(this, Observer {
                     movieList -> movies.addAll(movieList!!)
                     adapter.notifyDataSetChanged()
                     Log.d(TAG, movies[3].title)

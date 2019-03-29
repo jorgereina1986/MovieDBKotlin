@@ -17,12 +17,14 @@ import com.jorgereina.moviedbkotlin.R
 import com.jorgereina.moviedbkotlin.data.Movie
 import com.jorgereina.moviedbkotlin.viewmodel.MovieViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import retrofit2.HttpException
 
 class MainActivity : AppCompatActivity() {
 
     val TAG = MainActivity::class.java.simpleName
 
-    private var movies = ArrayList<Movie>()
+    private var searchMovies = ArrayList<Movie>()
+    private var popularMovies = ArrayList<Movie>()
     private lateinit var adapter: MovieAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var viewModel: MovieViewModel
@@ -33,14 +35,14 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
         layoutManager = LinearLayoutManager(this)
-        adapter = MovieAdapter(movies)
+        adapter = MovieAdapter(searchMovies)
         movies_rv.layoutManager = layoutManager
         movies_rv.adapter = adapter
 
-        //TODO: Fix this
-        viewModel.getPopularMovies().observe(this, Observer { popularMovies -> Log.d(TAG, "lagarto: " + popularMovies!![0].title) })
+        viewModel.getPopularMovies().observe(this, Observer { movies -> popularMovies.addAll(movies!!)
+            Log.d(TAG, popularMovies[0].title)
+        })
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.options_menu, menu)
@@ -53,10 +55,10 @@ class MainActivity : AppCompatActivity() {
         if (Intent.ACTION_SEARCH == intent.action) {
             intent.getStringExtra(SearchManager.QUERY)?.also { query ->
                 viewModel.setSearchQuery(query)
-                viewModel.getSearchMovies().observe(this, Observer {
-                    movieList -> movies.addAll(movieList!!)
+                viewModel.getSearchMovies().observe(this, Observer { movies ->
+                    searchMovies.addAll(movies!!)
                     adapter.notifyDataSetChanged()
-                    Log.d(TAG, movies[3].title)
+                    Log.d(TAG, searchMovies[3].title)
                 })
             }
         }

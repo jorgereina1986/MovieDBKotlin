@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
-class MovieViewModel: ViewModel() {
+class MovieViewModel : ViewModel() {
 
     val TAG = MovieViewModel::class.java.simpleName
 
@@ -47,7 +47,7 @@ class MovieViewModel: ViewModel() {
     private fun loadPopularMovies() {
         val movieService = ApiFactory.tmdbApi
         CoroutineScope(Dispatchers.Main).launch {
-            val popularMoviesRequest = movieService.getPopularMoviesAsync()
+            val popularMoviesRequest = movieService.getPopularMoviesAsync(BuildConfig.TMDB_API_KEY)
             getResponse(popularMoviesRequest, popularMovies)
         }
     }

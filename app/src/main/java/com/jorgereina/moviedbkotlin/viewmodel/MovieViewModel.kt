@@ -22,6 +22,7 @@ class MovieViewModel : ViewModel() {
     private val trendingMovies: MutableLiveData<List<Movie>> = MutableLiveData()
     private val popularMovies: MutableLiveData<List<Movie>> = MutableLiveData()
 
+
     fun getSearchMovies(): LiveData<List<Movie>> {
         return searchMovies
     }

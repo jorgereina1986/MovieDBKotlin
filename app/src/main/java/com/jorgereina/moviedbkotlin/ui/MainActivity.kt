@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.Menu
 
 import com.jorgereina.moviedbkotlin.R
+import com.jorgereina.moviedbkotlin.data.Category
 import com.jorgereina.moviedbkotlin.data.Movie
 import com.jorgereina.moviedbkotlin.viewmodel.MovieViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     val TAG = MainActivity::class.java.simpleName
 
+    private var categories = ArrayList<Category>()
     private var searchMovies = ArrayList<Movie>()
     private var popularMovies = ArrayList<Movie>()
     private lateinit var adapter: MovieAdapter
@@ -38,6 +40,8 @@ class MainActivity : AppCompatActivity() {
         adapter = MovieAdapter(searchMovies)
         movies_rv.layoutManager = layoutManager
         movies_rv.adapter = adapter
+
+
 
         viewModel.getPopularMovies().observe(this, Observer { movies -> popularMovies.addAll(movies!!)
             Log.d(TAG, popularMovies[0].title)

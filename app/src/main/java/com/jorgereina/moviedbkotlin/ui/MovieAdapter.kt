@@ -52,7 +52,7 @@ class MovieAdapter(private val movies: ArrayList<Movie>) : RecyclerView.Adapter<
         var newPath = path.substring(1)
 
         var uri: Uri.Builder = Uri.Builder()
-        uri.scheme(SCHEME).authority(AUTHORITY).appendPath(PATH_T).appendPath(PATH_P).appendPath(PictureSize.THUMB.size).appendPath(newPath)
+        uri.scheme(SCHEME).authority(AUTHORITY).appendPath(PATH_T).appendPath(PATH_P).appendPath(PictureSize.POSTER.size).appendPath(newPath)
         return uri.build().toString()
     }
 

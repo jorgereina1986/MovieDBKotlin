@@ -12,12 +12,16 @@ interface MovieApi {
     fun getSearchMoviesAsync(@Query("api_key") apiKey: String, @Query("query") query: String): Deferred<MovieResponse>
 
     //https://api.themoviedb.org/3/movie/popular?api_key=<<api_key>>&language=en-US&page=1
-    @GET("movie/popular")
+    @GET("movie/popular?language=en-US&page=1")
     fun getPopularMoviesAsync(@Query("api_key") apiKey: String): Deferred<MovieResponse>
 
     //https://api.themoviedb.org/3/trending/all/day?api_key=<<api_key>>
-    @GET("trending/all/day?")
+    @GET("trending/all/day?language=en-US&page=1")
     fun getTrendingMoviesAsync(@Query("api_key") apiKey: String): Deferred<MovieResponse>
+
+    //https://api.themoviedb.org/3/movie/upcoming?api_key=fe321b50d58f46c550723750263ad677&language=en-US&page=1
+    @GET("movie/upcoming?language=en-US&page=1")
+    fun getUpcomingMovies(@Query("api_key") apiKey: String) : Deferred<MovieResponse>
 
 
 }

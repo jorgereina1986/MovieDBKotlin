@@ -6,7 +6,8 @@ data class Movie(
     val title: String,
     val overview: String,
     val adult: Boolean,
-    val poster_path: String
+    val poster_path: String,
+    val name: String
 )
 
 data class MovieResponse(

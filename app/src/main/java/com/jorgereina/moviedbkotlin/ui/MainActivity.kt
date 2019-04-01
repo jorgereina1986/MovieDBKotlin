@@ -15,11 +15,9 @@ import android.view.Menu
 
 import com.jorgereina.moviedbkotlin.R
 import com.jorgereina.moviedbkotlin.data.Category
-import com.jorgereina.moviedbkotlin.data.CategoryFactory
 import com.jorgereina.moviedbkotlin.data.Movie
 import com.jorgereina.moviedbkotlin.viewmodel.MovieViewModel
 import kotlinx.android.synthetic.main.activity_main.*
-import retrofit2.HttpException
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private var searchMovies = ArrayList<Movie>()
     private var popularMovies = ArrayList<Movie>()
     private var trendingMovies = ArrayList<Movie>()
+    private var upcomingMovies = ArrayList<Movie>()
     private lateinit var adapter: CategoryAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var viewModel: MovieViewModel
@@ -67,20 +66,16 @@ class MainActivity : AppCompatActivity() {
                 adapter.notifyDataSetChanged()
             }
         })
-
-
-
-//        layoutManager = LinearLayoutManager(this)
-//        adapter = MovieAdapter(searchMovies)
-
-
-
-
-//        viewModel.getPopularMovies().observe(this, Observer { movies -> popularMovies.addAll(movies!!)
-//            Log.d(TAG, popularMovies[0].title)
-//        })
-
-
+        viewModel.getUpcomingMovies().observe(this, Observer { movies ->
+            if (upcomingMovies.isEmpty()) {
+                upcomingMovies.addAll(movies!!)
+            }
+            val upcomingMoviesCategory = Category("Coming Soon", upcomingMovies)
+            if (!categories.contains(upcomingMoviesCategory)) {
+                categories.add(upcomingMoviesCategory)
+                adapter.notifyDataSetChanged()
+            }
+        })
 
     }
 

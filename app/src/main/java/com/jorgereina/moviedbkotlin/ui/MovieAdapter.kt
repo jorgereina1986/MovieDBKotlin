@@ -29,7 +29,11 @@ class MovieAdapter(private val movies: ArrayList<Movie>) : RecyclerView.Adapter<
         var movie: Movie = movies[position]
         var path = movie.poster_path
 
-        holder.movieTitle.text = movie.title
+        if (!movie.title.isNullOrEmpty()) {
+            holder.movieTitle.text = movie.title
+        } else {
+            holder.movieTitle.text = movie.name
+        }
         if (path.isNullOrEmpty()) {
             holder.moviePoster.setImageResource(R.drawable.ic_movie)
 

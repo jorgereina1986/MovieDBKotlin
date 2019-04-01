@@ -21,6 +21,7 @@ class MovieViewModel : ViewModel() {
     private val searchMovies: MutableLiveData<List<Movie>> = MutableLiveData()
     private val trendingMovies: MutableLiveData<List<Movie>> = MutableLiveData()
     private val popularMovies: MutableLiveData<List<Movie>> = MutableLiveData()
+    private val upcomingMovies: MutableLiveData<List<Movie>> = MutableLiveData()
     private val movieService = ApiFactory.tmdbApi
 
 
@@ -61,6 +62,18 @@ class MovieViewModel : ViewModel() {
         CoroutineScope(Dispatchers.Main).launch {
             val trendingMovieRequest = movieService.getTrendingMoviesAsync(BuildConfig.TMDB_API_KEY)
             getResponse(trendingMovieRequest, trendingMovies)
+        }
+    }
+
+    fun getUpcomingMovies(): LiveData<List<Movie>> {
+        loadUpcomingMovies()
+        return upcomingMovies
+    }
+
+    private fun loadUpcomingMovies() {
+        CoroutineScope(Dispatchers.Main).launch {
+            val upcomingMoviesRequest = movieService.getUpcomingMovies(BuildConfig.TMDB_API_KEY)
+            getResponse(upcomingMoviesRequest, upcomingMovies)
         }
     }
 

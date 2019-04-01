@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity() {
     private var popularMovies = ArrayList<Movie>()
     private var trendingMovies = ArrayList<Movie>()
     private lateinit var adapter: CategoryAdapter
-//    private lateinit var adapter: MovieAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var viewModel: MovieViewModel
 
@@ -46,19 +45,29 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
 
-        viewModel.getPopularMovies().observe(this, Observer { movies -> popularMovies.addAll(movies!!)
+        viewModel.getPopularMovies().observe(this, Observer { movies ->
+            if (popularMovies.isEmpty()) {
+                popularMovies.addAll(movies!!)
+            }
             Log.d(TAG, popularMovies[0].title)
             val popularMoviesCategory = Category("Popular Movies", popularMovies)
-            categories.add(popularMoviesCategory)
-
+            if (!categories.contains(popularMoviesCategory)) {
+                categories.add(popularMoviesCategory)
+                adapter.notifyDataSetChanged()
+            }
         })
-        viewModel.getTrendingMovies().observe(this, Observer { movies -> trendingMovies.addAll(movies!!)
+        viewModel.getTrendingMovies().observe(this, Observer { movies ->
+            if (trendingMovies.isEmpty()) {
+                trendingMovies.addAll(movies!!)
+            }
             Log.d(TAG, trendingMovies[0].title)
             val trendingMoviesCategory = Category("Trending Movies", trendingMovies)
-            categories.add(trendingMoviesCategory)
+            if (!categories.contains(trendingMoviesCategory)) {
+                categories.add(trendingMoviesCategory)
+                adapter.notifyDataSetChanged()
+            }
         })
 
-        adapter.notifyDataSetChanged()
 
 
 //        layoutManager = LinearLayoutManager(this)

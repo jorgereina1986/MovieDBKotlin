@@ -15,6 +15,7 @@ import android.view.Menu
 
 import com.jorgereina.moviedbkotlin.R
 import com.jorgereina.moviedbkotlin.data.Category
+import com.jorgereina.moviedbkotlin.data.CategoryFactory
 import com.jorgereina.moviedbkotlin.data.Movie
 import com.jorgereina.moviedbkotlin.viewmodel.MovieViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -27,7 +28,9 @@ class MainActivity : AppCompatActivity() {
     private var categories = ArrayList<Category>()
     private var searchMovies = ArrayList<Movie>()
     private var popularMovies = ArrayList<Movie>()
-    private lateinit var adapter: MovieAdapter
+    private var trendingMovies = ArrayList<Movie>()
+    private lateinit var adapter: CategoryAdapter
+//    private lateinit var adapter: MovieAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var viewModel: MovieViewModel
 
@@ -35,17 +38,41 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
         layoutManager = LinearLayoutManager(this)
-        adapter = MovieAdapter(searchMovies)
+        adapter = CategoryAdapter(categories)
+
         movies_rv.layoutManager = layoutManager
         movies_rv.adapter = adapter
 
-
+        viewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
 
         viewModel.getPopularMovies().observe(this, Observer { movies -> popularMovies.addAll(movies!!)
             Log.d(TAG, popularMovies[0].title)
+            val popularMoviesCategory = Category("Popular Movies", popularMovies)
+            categories.add(popularMoviesCategory)
+
         })
+        viewModel.getTrendingMovies().observe(this, Observer { movies -> trendingMovies.addAll(movies!!)
+            Log.d(TAG, trendingMovies[0].title)
+            val trendingMoviesCategory = Category("Trending Movies", trendingMovies)
+            categories.add(trendingMoviesCategory)
+        })
+
+        adapter.notifyDataSetChanged()
+
+
+//        layoutManager = LinearLayoutManager(this)
+//        adapter = MovieAdapter(searchMovies)
+
+
+
+
+//        viewModel.getPopularMovies().observe(this, Observer { movies -> popularMovies.addAll(movies!!)
+//            Log.d(TAG, popularMovies[0].title)
+//        })
+
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

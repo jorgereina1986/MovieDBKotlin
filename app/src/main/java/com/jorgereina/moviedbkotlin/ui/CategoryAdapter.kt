@@ -1,10 +1,7 @@
 package com.jorgereina.moviedbkotlin.ui
 
-import android.arch.lifecycle.Observer
-import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,10 +15,11 @@ class CategoryAdapter(private val categories: ArrayList<Category>) : RecyclerVie
 
     private val viewPool = RecyclerView.RecycledViewPool()
     private lateinit var viewModel: MovieViewModel
+    private lateinit var movieAdapter: MovieAdapter
 
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): CategoryAdapter.CategoryViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_item, parent, false) as View
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.child_rv_item, parent, false) as View
         return CategoryViewHolder(view)
     }
 
@@ -31,14 +29,15 @@ class CategoryAdapter(private val categories: ArrayList<Category>) : RecyclerVie
 
     override fun onBindViewHolder(holder: CategoryAdapter.CategoryViewHolder, pos: Int) {
         val category: Category = categories[pos]
+
+        holder.categoryTitle.text = category.title
+
         val categoryLlm = LinearLayoutManager(holder.categoryRv.context, LinearLayoutManager.HORIZONTAL, false)
         categoryLlm.initialPrefetchItemCount = 2
+        movieAdapter = MovieAdapter(category.movies)
 
         holder.categoryRv.layoutManager = categoryLlm
-
-        viewModel.getPopularMovies().observe(holder.categoryRv.context, Observer { movies ->
-            holder.categoryRv.adapter = MovieAdapter(movies as ArrayList<Movie>)
-        })
+        holder.categoryRv.adapter = movieAdapter
     }
 
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

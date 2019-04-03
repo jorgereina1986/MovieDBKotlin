@@ -20,6 +20,7 @@ class MovieViewModel : ViewModel() {
 
     private val searchMovies: MutableLiveData<List<Movie>> = MutableLiveData()
     private val trendingMovies: MutableLiveData<List<Movie>> = MutableLiveData()
+    private val trendingTvShows: MutableLiveData<List<Movie>> = MutableLiveData()
     private val popularMovies: MutableLiveData<List<Movie>> = MutableLiveData()
     private val upcomingMovies: MutableLiveData<List<Movie>> = MutableLiveData()
     private val movieService = ApiFactory.tmdbApi
@@ -53,17 +54,26 @@ class MovieViewModel : ViewModel() {
         }
     }
 
-    fun getTrendingMovies(): LiveData<List<Movie>> {
-        loadTrendingMovies()
-        return trendingMovies
+    fun getTrendingMedia(mediaType: String): LiveData<List<Movie>> {
+        loadTrendingMedia(mediaType)
+        return if (mediaType == "movie") {
+            trendingMovies
+        } else
+            trendingTvShows
     }
 
-    private fun loadTrendingMovies() {
+    private fun loadTrendingMedia(mediaType: String) {
         CoroutineScope(Dispatchers.Main).launch {
-            val trendingMovieRequest = movieService.getTrendingMoviesAsync(BuildConfig.TMDB_API_KEY)
-            getResponse(trendingMovieRequest, trendingMovies)
+            val trendingMediaRequest  = movieService.getTrendingMediaAsync(mediaType, BuildConfig.TMDB_API_KEY)
+            if (mediaType == "movie") {
+                getResponse(trendingMediaRequest, trendingMovies)
+            } else if (mediaType == "tv"){
+                getResponse(trendingMediaRequest, trendingTvShows)
+            }
         }
     }
+
+
 
     fun getUpcomingMovies(): LiveData<List<Movie>> {
         loadUpcomingMovies()

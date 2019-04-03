@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private var searchMovies = ArrayList<Movie>()
     private var popularMovies = ArrayList<Movie>()
     private var trendingMovies = ArrayList<Movie>()
+    private var trendingTvShows = ArrayList<Movie>()
     private var upcomingMovies = ArrayList<Movie>()
     private lateinit var adapter: CategoryAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
@@ -45,38 +46,33 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
 
         viewModel.getPopularMovies().observe(this, Observer { movies ->
-            if (popularMovies.isEmpty()) {
-                popularMovies.addAll(movies!!)
-            }
-            Log.d(TAG, popularMovies[0].title)
-            val popularMoviesCategory = Category("Popular Movies", popularMovies)
-            if (!categories.contains(popularMoviesCategory)) {
-                categories.add(popularMoviesCategory)
-                adapter.notifyDataSetChanged()
-            }
+            getMovies(movies, popularMovies, "Popular Movies")
+            Log.d(TAG, "Popular Movies")
         })
-        viewModel.getTrendingMovies().observe(this, Observer { movies ->
-            if (trendingMovies.isEmpty()) {
-                trendingMovies.addAll(movies!!)
-            }
-            Log.d(TAG, trendingMovies[0].title)
-            val trendingMoviesCategory = Category("Trending Movies", trendingMovies)
-            if (!categories.contains(trendingMoviesCategory)) {
-                categories.add(trendingMoviesCategory)
-                adapter.notifyDataSetChanged()
-            }
+        viewModel.getTrendingMedia("movie").observe(this, Observer { movies ->
+            getMovies(movies, trendingMovies, "Trending Movies")
+            Log.d(TAG, "Trending Movies")
         })
         viewModel.getUpcomingMovies().observe(this, Observer { movies ->
-            if (upcomingMovies.isEmpty()) {
-                upcomingMovies.addAll(movies!!)
-            }
-            val upcomingMoviesCategory = Category("Coming Soon", upcomingMovies)
-            if (!categories.contains(upcomingMoviesCategory)) {
-                categories.add(upcomingMoviesCategory)
-                adapter.notifyDataSetChanged()
-            }
+            getMovies(movies, upcomingMovies, "Coming Soon")
+            Log.d(TAG, "Upcoming Movies")
+        })
+        viewModel.getTrendingMedia("tv").observe(this, Observer { movies ->
+            getMovies(movies, trendingTvShows, "Trending TV Shows")
+            Log.d(TAG, "Trending TV Shows")
         })
 
+    }
+
+    private fun getMovies(movies: List<Movie>?, movieList: ArrayList<Movie>, categoryTitle: String) {
+        if (movieList.isEmpty()) {
+            movieList.addAll(movies!!)
+        }
+        val category = Category(categoryTitle, movieList)
+        if (!categories.contains(category)) {
+            categories.add(category)
+            adapter.notifyDataSetChanged()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

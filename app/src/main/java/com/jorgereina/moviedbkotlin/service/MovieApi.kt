@@ -3,6 +3,7 @@ package com.jorgereina.moviedbkotlin.service
 import com.jorgereina.moviedbkotlin.data.MovieResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MovieApi {
@@ -15,9 +16,11 @@ interface MovieApi {
     @GET("movie/popular?language=en-US&page=1")
     fun getPopularMoviesAsync(@Query("api_key") apiKey: String): Deferred<MovieResponse>
 
-    //https://api.themoviedb.org/3/trending/all/day?api_key=<<api_key>>
-    @GET("trending/all/day?language=en-US&page=1")
-    fun getTrendingMoviesAsync(@Query("api_key") apiKey: String): Deferred<MovieResponse>
+    //https://api.themoviedb.org/3/trending/{mediaType}/day?api_key=<<api_key>>
+    //https://api.themoviedb.org/3/trending/movie/day?api_key=fe321b50d58f46c550723750263ad677
+
+    @GET("trending/{mediaType}/day?language=en-US&page=1")
+    fun getTrendingMediaAsync(@Path("mediaType") mediaType: String, @Query("api_key") apiKey: String): Deferred<MovieResponse>
 
     //https://api.themoviedb.org/3/movie/upcoming?api_key=fe321b50d58f46c550723750263ad677&language=en-US&page=1
     @GET("movie/upcoming?language=en-US&page=1")

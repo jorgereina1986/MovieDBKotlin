@@ -2,7 +2,6 @@ package com.jorgereina.moviedbkotlin.ui
 
 import android.net.Uri
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,8 +25,8 @@ class MovieAdapter(private val movies: ArrayList<Movie>) : RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: MovieAdapter.MovieViewHolder, position: Int) {
 
-        var movie: Movie = movies[position]
-        var path = movie.poster_path
+        val movie: Movie = movies[position]
+        val path = movie.poster_path
 
         if (!movie.title.isNullOrEmpty()) {
             holder.movieTitle.text = movie.title
@@ -53,9 +52,9 @@ class MovieAdapter(private val movies: ArrayList<Movie>) : RecyclerView.Adapter<
         val AUTHORITY = "image.tmdb.org"
         val PATH_T = "t"
         val PATH_P = "p"
-        var newPath = path.substring(1)
+        val newPath = path.substring(1)
 
-        var uri: Uri.Builder = Uri.Builder()
+        val uri: Uri.Builder = Uri.Builder()
         uri.scheme(SCHEME).authority(AUTHORITY).appendPath(PATH_T).appendPath(PATH_P).appendPath(PictureSize.POSTER.size).appendPath(newPath)
         return uri.build().toString()
     }

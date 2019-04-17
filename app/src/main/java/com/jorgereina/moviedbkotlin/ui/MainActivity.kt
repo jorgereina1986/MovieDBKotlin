@@ -19,60 +19,29 @@ import com.jorgereina.moviedbkotlin.data.Movie
 import com.jorgereina.moviedbkotlin.viewmodel.MovieViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CategoriesFragment.OnMovieSelectedListener {
+
+    override fun onMovieClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onMovieLongClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     val TAG = MainActivity::class.java.simpleName
 
-    private var categories = ArrayList<Category>()
     private var searchMovies = ArrayList<Movie>()
-    private var popularMovies = ArrayList<Movie>()
-    private var trendingMovies = ArrayList<Movie>()
-    private var trendingTvShows = ArrayList<Movie>()
-    private var upcomingMovies = ArrayList<Movie>()
     private lateinit var adapter: CategoryAdapter
-    private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var viewModel: MovieViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        layoutManager = LinearLayoutManager(this)
-        adapter = CategoryAdapter(categories)
-
-        movies_rv.layoutManager = layoutManager
-        movies_rv.adapter = adapter
-
         viewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
+        supportFragmentManager.beginTransaction().add(R.id.fragment_container, CategoriesFragment(), "categories").commit()
 
-        viewModel.getPopularMovies().observe(this, Observer { movies ->
-            getMovies(movies, popularMovies, "Popular Movies")
-            Log.d(TAG, "Popular Movies")
-        })
-        viewModel.getTrendingMedia("movie").observe(this, Observer { movies ->
-            getMovies(movies, trendingMovies, "Trending Movies")
-            Log.d(TAG, "Trending Movies")
-        })
-        viewModel.getUpcomingMovies().observe(this, Observer { movies ->
-            getMovies(movies, upcomingMovies, "Coming Soon")
-            Log.d(TAG, "Upcoming Movies")
-        })
-        viewModel.getTrendingMedia("tv").observe(this, Observer { movies ->
-            getMovies(movies, trendingTvShows, "Trending TV Shows")
-            Log.d(TAG, "Trending TV Shows")
-        })
-
-    }
-
-    private fun getMovies(movies: List<Movie>?, movieList: ArrayList<Movie>, categoryTitle: String) {
-        if (movieList.isEmpty()) {
-            movieList.addAll(movies!!)
-        }
-        val category = Category(categoryTitle, movieList)
-        if (!categories.contains(category)) {
-            categories.add(category)
-            adapter.notifyDataSetChanged()
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

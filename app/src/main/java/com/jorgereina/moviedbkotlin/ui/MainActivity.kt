@@ -20,14 +20,14 @@ import com.jorgereina.moviedbkotlin.viewmodel.MovieViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), CategoriesFragment.OnMovieSelectedListener {
-
-    override fun onMovieClick() {
+    override fun onMovieClick(position: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onMovieLongClick() {
+    override fun onMovieLongClick(position: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
 
     val TAG = MainActivity::class.java.simpleName
 
@@ -40,7 +40,13 @@ class MainActivity : AppCompatActivity(), CategoriesFragment.OnMovieSelectedList
         setContentView(R.layout.activity_main)
 
         viewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
-        supportFragmentManager.beginTransaction().add(R.id.fragment_container, CategoriesFragment(), "categories").commit()
+
+        if (savedInstanceState == null) {
+            supportFragmentManager
+                .beginTransaction()
+                .add(R.id.fragment_container, CategoriesFragment.newInstance(), "categories")
+                .commit()
+        }
 
     }
 

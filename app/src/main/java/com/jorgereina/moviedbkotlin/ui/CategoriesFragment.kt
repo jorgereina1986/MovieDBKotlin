@@ -29,8 +29,15 @@ class CategoriesFragment : Fragment() {
     private lateinit var adapter: CategoryAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var viewModel: MovieViewModel
-
     private lateinit var listener: OnMovieSelectedListener
+
+    companion object {
+
+        fun newInstance(): CategoriesFragment {
+            return CategoriesFragment()
+        }
+    }
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
 
@@ -88,7 +95,7 @@ class CategoriesFragment : Fragment() {
     }
 
     interface OnMovieSelectedListener {
-        fun onMovieClick()
-        fun onMovieLongClick()
+        fun onMovieClick(position: Int)
+        fun onMovieLongClick(position: Int)
     }
 }

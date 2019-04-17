@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.jorgereina.moviedbkotlin.R
 import com.jorgereina.moviedbkotlin.data.Movie
 import com.squareup.picasso.Picasso
@@ -13,6 +14,8 @@ import kotlinx.android.synthetic.main.movie_item.view.*
 class MovieAdapter(private val movies: ArrayList<Movie>) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
     val TAG = MovieAdapter::class.java.simpleName
+
+    val listener: CategoriesFragment.OnMovieSelectedListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieAdapter.MovieViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_item, parent, false) as View
@@ -41,9 +44,20 @@ class MovieAdapter(private val movies: ArrayList<Movie>) : RecyclerView.Adapter<
         }
     }
 
-    class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val movieTitle = view.movie_title_tv!!
-        val moviePoster = view.movie_poster_iv!!
+    inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+
+        init {
+            itemView.setOnClickListener {
+                Toast.makeText(itemView.context, adapterPosition.toString(), Toast.LENGTH_LONG).show()
+            }
+        }
+
+        override fun onClick(v: View?) {
+            listener!!.onMovieClick(adapterPosition)
+        }
+
+        val movieTitle = itemView.movie_title_tv!!
+        val moviePoster = itemView.movie_poster_iv!!
     }
 
     private fun buildUri(path: String): String {
@@ -55,7 +69,8 @@ class MovieAdapter(private val movies: ArrayList<Movie>) : RecyclerView.Adapter<
         val newPath = path.substring(1)
 
         val uri: Uri.Builder = Uri.Builder()
-        uri.scheme(SCHEME).authority(AUTHORITY).appendPath(PATH_T).appendPath(PATH_P).appendPath(PictureSize.POSTER.size).appendPath(newPath)
+        uri.scheme(SCHEME).authority(AUTHORITY).appendPath(PATH_T).appendPath(PATH_P)
+            .appendPath(PictureSize.POSTER.size).appendPath(newPath)
         return uri.build().toString()
     }
 

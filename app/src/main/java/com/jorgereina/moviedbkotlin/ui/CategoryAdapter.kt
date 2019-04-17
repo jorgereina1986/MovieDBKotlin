@@ -16,6 +16,7 @@ class CategoryAdapter(private val categories: ArrayList<Category>) : RecyclerVie
     private val viewPool = RecyclerView.RecycledViewPool()
     private lateinit var viewModel: MovieViewModel
     private lateinit var movieAdapter: MovieAdapter
+    lateinit var listener: CategoriesFragment.OnMovieSelectedListener
 
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): CategoryAdapter.CategoryViewHolder {
@@ -38,10 +39,13 @@ class CategoryAdapter(private val categories: ArrayList<Category>) : RecyclerVie
 
         holder.categoryRv.layoutManager = categoryLlm
         holder.categoryRv.adapter = movieAdapter
+
     }
 
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val categoryTitle = itemView.category_title_tv
-        val categoryRv = itemView.category_rv
+
+        val categoryTitle = itemView.category_title_tv!!
+        val categoryRv = itemView.category_rv!!
+
     }
 }

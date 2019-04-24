@@ -11,12 +11,13 @@ import com.jorgereina.moviedbkotlin.data.Movie
 import com.jorgereina.moviedbkotlin.viewmodel.MovieViewModel
 import kotlinx.android.synthetic.main.child_rv_item.view.*
 
-class CategoryAdapter(private val categories: ArrayList<Category>) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
+class CategoryAdapter(private val categories: ArrayList<Category>, private val listener: CategoriesFragment.OnMovieSelectedListener) :
+    RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
     private val viewPool = RecyclerView.RecycledViewPool()
     private lateinit var viewModel: MovieViewModel
     private lateinit var movieAdapter: MovieAdapter
-    lateinit var listener: CategoriesFragment.OnMovieSelectedListener
+
 
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): CategoryAdapter.CategoryViewHolder {
@@ -35,7 +36,7 @@ class CategoryAdapter(private val categories: ArrayList<Category>) : RecyclerVie
 
         val categoryLlm = LinearLayoutManager(holder.categoryRv.context, LinearLayoutManager.HORIZONTAL, false)
         categoryLlm.initialPrefetchItemCount = 2
-        movieAdapter = MovieAdapter(category.movies)
+        movieAdapter = MovieAdapter(movies = category.movies, listener = listener)
 
         holder.categoryRv.layoutManager = categoryLlm
         holder.categoryRv.adapter = movieAdapter

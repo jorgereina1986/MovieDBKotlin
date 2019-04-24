@@ -5,17 +5,16 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.jorgereina.moviedbkotlin.R
 import com.jorgereina.moviedbkotlin.data.Movie
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.movie_item.view.*
 
-class MovieAdapter(private val movies: ArrayList<Movie>) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
+class MovieAdapter internal constructor
+    (private val listener: CategoriesFragment.OnMovieSelectedListener ,private val movies: ArrayList<Movie>) :
+    RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
     val TAG = MovieAdapter::class.java.simpleName
-
-    val listener: CategoriesFragment.OnMovieSelectedListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieAdapter.MovieViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_item, parent, false) as View
@@ -47,13 +46,11 @@ class MovieAdapter(private val movies: ArrayList<Movie>) : RecyclerView.Adapter<
     inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         init {
-            itemView.setOnClickListener {
-                Toast.makeText(itemView.context, adapterPosition.toString(), Toast.LENGTH_LONG).show()
-            }
+            itemView.setOnClickListener(this)
         }
 
         override fun onClick(v: View?) {
-            listener!!.onMovieClick(adapterPosition)
+            listener?.onMovieClick(adapterPosition)
         }
 
         val movieTitle = itemView.movie_title_tv!!

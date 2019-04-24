@@ -1,5 +1,6 @@
 package com.jorgereina.moviedbkotlin.ui
 
+import android.app.Dialog
 import android.app.SearchManager
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -12,24 +13,43 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.Menu
+import android.view.View
+import android.view.Window
+import android.widget.Toast
+import android.widget.VideoView
 
 import com.jorgereina.moviedbkotlin.R
 import com.jorgereina.moviedbkotlin.data.Category
 import com.jorgereina.moviedbkotlin.data.Movie
 import com.jorgereina.moviedbkotlin.viewmodel.MovieViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.video_dialog.*
 
 class MainActivity : AppCompatActivity(), CategoriesFragment.OnMovieSelectedListener {
-    override fun onMovieClick(position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onMovieLongClick(position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
 
     val TAG = MainActivity::class.java.simpleName
+
+    override fun onMovieClick(position: Int) {
+        Log.d(TAG, "onMovieClick: $position")
+        Toast.makeText(applicationContext, "movie position is $position", Toast.LENGTH_LONG).show()
+
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.video_dialog)
+        dialog.show()
+
+        val videoView = dialog.findViewById<VideoView>(R.id.video_player)
+        videoView.setVideoURI("https://www.youtube.com/watch?v=Y_JGZTlUbZg")
+        videoView.start()
+
+    }
+
+    override fun onMovieLongClick(view: View, position: Int) {
+        Log.d(TAG, "onMovieLongClick: $position")
+        Toast.makeText(applicationContext, "movie position is $position", Toast.LENGTH_LONG).show()
+    }
+
+
 
     private var searchMovies = ArrayList<Movie>()
     private lateinit var adapter: CategoryAdapter

@@ -7,6 +7,7 @@ import android.util.Log
 import com.jorgereina.moviedbkotlin.BuildConfig
 import com.jorgereina.moviedbkotlin.data.Movie
 import com.jorgereina.moviedbkotlin.data.MovieResponse
+import com.jorgereina.moviedbkotlin.data.VideoResponse
 import com.jorgereina.moviedbkotlin.service.ApiFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -23,8 +24,8 @@ class MovieViewModel : ViewModel() {
     private val trendingTvShows: MutableLiveData<List<Movie>> = MutableLiveData()
     private val popularMovies: MutableLiveData<List<Movie>> = MutableLiveData()
     private val upcomingMovies: MutableLiveData<List<Movie>> = MutableLiveData()
+    private val movieUrl: MutableLiveData<String> = MutableLiveData()
     private val movieService = ApiFactory.tmdbApi
-
 
     fun getSearchMovies(): LiveData<List<Movie>> {
         return searchMovies
@@ -37,7 +38,7 @@ class MovieViewModel : ViewModel() {
     private fun loadSearchedMovies(query: String) {
         CoroutineScope(Dispatchers.Main).launch {
             val searchMoviesRequest = movieService.getSearchMoviesAsync(BuildConfig.TMDB_API_KEY, query)
-            getResponse(searchMoviesRequest, searchMovies)
+            getListResponse(searchMoviesRequest, searchMovies)
         }
     }
 
@@ -50,7 +51,7 @@ class MovieViewModel : ViewModel() {
     private fun loadPopularMovies() {
         CoroutineScope(Dispatchers.Main).launch {
             val popularMoviesRequest = movieService.getPopularMoviesAsync(BuildConfig.TMDB_API_KEY)
-            getResponse(popularMoviesRequest, popularMovies)
+            getListResponse(popularMoviesRequest, popularMovies)
         }
     }
 
@@ -66,14 +67,12 @@ class MovieViewModel : ViewModel() {
         CoroutineScope(Dispatchers.Main).launch {
             val trendingMediaRequest  = movieService.getTrendingMediaAsync(mediaType, BuildConfig.TMDB_API_KEY)
             if (mediaType == "movie") {
-                getResponse(trendingMediaRequest, trendingMovies)
+                getListResponse(trendingMediaRequest, trendingMovies)
             } else if (mediaType == "tv"){
-                getResponse(trendingMediaRequest, trendingTvShows)
+                getListResponse(trendingMediaRequest, trendingTvShows)
             }
         }
     }
-
-
 
     fun getUpcomingMovies(): LiveData<List<Movie>> {
         loadUpcomingMovies()
@@ -83,11 +82,20 @@ class MovieViewModel : ViewModel() {
     private fun loadUpcomingMovies() {
         CoroutineScope(Dispatchers.Main).launch {
             val upcomingMoviesRequest = movieService.getUpcomingMovies(BuildConfig.TMDB_API_KEY)
-            getResponse(upcomingMoviesRequest, upcomingMovies)
+            getListResponse(upcomingMoviesRequest, upcomingMovies)
         }
     }
 
-    private suspend fun getResponse(movieRequest: Deferred<MovieResponse>, movies: MutableLiveData<List<Movie>>) {
+//    fun getMovieUrl(position: String): String {
+//
+//        CoroutineScope(Dispatchers.Main).launch {
+//            val movieUrlRequest = movieService.getMovieInfoAsync(position, BuildConfig.TMDB_API_KEY)
+//        }
+//
+//        return movieUrl
+//    }
+
+    private suspend fun getListResponse(movieRequest: Deferred<MovieResponse>, movies: MutableLiveData<List<Movie>>) {
         try {
             val response = movieRequest.await()
             movies.value = response.results
@@ -96,5 +104,12 @@ class MovieViewModel : ViewModel() {
         } catch (e: HttpException) {
             Log.d(TAG, e.message)
         }
+    }
+
+    private suspend fun getMovieurlResponse(request: Deferred<VideoResponse>) {
+//        try {
+//            val response = request.await()
+//            response.videos[0].id
+//        }
     }
 }

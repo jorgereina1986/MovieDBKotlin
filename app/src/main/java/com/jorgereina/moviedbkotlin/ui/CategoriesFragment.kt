@@ -60,7 +60,7 @@ class CategoriesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         layoutManager = LinearLayoutManager(context)
-        adapter = CategoryAdapter(categories)
+        adapter = CategoryAdapter(categories, listener)
 
         movies_rv.layoutManager = layoutManager
         movies_rv.adapter = adapter
@@ -96,6 +96,6 @@ class CategoriesFragment : Fragment() {
 
     interface OnMovieSelectedListener {
         fun onMovieClick(position: Int)
-        fun onMovieLongClick(position: Int)
+        fun onMovieLongClick(view: View, position: Int)
     }
 }

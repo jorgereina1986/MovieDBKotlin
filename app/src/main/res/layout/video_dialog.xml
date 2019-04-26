@@ -4,7 +4,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <VideoView
-            android:id="@+id/video_player"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    <com.google.android.youtube.player.YouTubePlayerView
+            android:id="@+id/trailer_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    <!--<VideoView-->
+            <!--android:id="@+id/video_player"-->
+            <!--android:layout_width="wrap_content" android:layout_height="wrap_content"/>-->
 </android.support.constraint.ConstraintLayout>

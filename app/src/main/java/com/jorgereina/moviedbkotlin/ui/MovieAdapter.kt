@@ -11,7 +11,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.movie_item.view.*
 
 class MovieAdapter internal constructor
-    (private val listener: CategoriesFragment.OnMovieSelectedListener ,private val movies: ArrayList<Movie>) :
+    (private val listener: CategoriesFragment.OnMovieSelectedListener, private val movies: ArrayList<Movie>) :
     RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
     val TAG = MovieAdapter::class.java.simpleName
@@ -43,14 +43,21 @@ class MovieAdapter internal constructor
         }
     }
 
-    inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener,
+        View.OnLongClickListener {
 
         init {
             itemView.setOnClickListener(this)
+            itemView.setOnLongClickListener(this)
+        }
+
+        override fun onLongClick(v: View?): Boolean {
+            listener.onMovieLongClick(adapterPosition)
+            return true
         }
 
         override fun onClick(v: View?) {
-            listener?.onMovieClick(adapterPosition)
+            listener.onMovieClick(adapterPosition)
         }
 
         val movieTitle = itemView.movie_title_tv!!

@@ -96,6 +96,6 @@ class CategoriesFragment : Fragment() {
 
     interface OnMovieSelectedListener {
         fun onMovieClick(position: Int)
-        fun onMovieLongClick(view: View, position: Int)
+        fun onMovieLongClick(position: Int)
     }
 }

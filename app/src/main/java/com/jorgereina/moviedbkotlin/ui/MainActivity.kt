@@ -1,5 +1,6 @@
 package com.jorgereina.moviedbkotlin.ui
 
+import android.app.Activity
 import android.app.Dialog
 import android.app.SearchManager
 import android.arch.lifecycle.Observer
@@ -17,6 +18,8 @@ import android.view.View
 import android.view.Window
 import android.widget.Toast
 import android.widget.VideoView
+import com.google.android.youtube.player.YouTubeIntents
+import com.google.android.youtube.player.YouTubePlayerView
 
 import com.jorgereina.moviedbkotlin.R
 import com.jorgereina.moviedbkotlin.data.Category
@@ -29,31 +32,37 @@ class MainActivity : AppCompatActivity(), CategoriesFragment.OnMovieSelectedList
 
     val TAG = MainActivity::class.java.simpleName
 
-    override fun onMovieClick(position: Int) {
-        Log.d(TAG, "onMovieClick: $position")
-        Toast.makeText(applicationContext, "movie position is $position", Toast.LENGTH_LONG).show()
-
-        val dialog = Dialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(R.layout.video_dialog)
-        dialog.show()
-
-        val videoView = dialog.findViewById<VideoView>(R.id.video_player)
-        videoView.setVideoURI("https://www.youtube.com/watch?v=Y_JGZTlUbZg")
-        videoView.start()
-
-    }
-
-    override fun onMovieLongClick(view: View, position: Int) {
-        Log.d(TAG, "onMovieLongClick: $position")
-        Toast.makeText(applicationContext, "movie position is $position", Toast.LENGTH_LONG).show()
-    }
-
-
+    private val SELECT_VIDEO_REQUEST = 1000
 
     private var searchMovies = ArrayList<Movie>()
     private lateinit var adapter: CategoryAdapter
     private lateinit var viewModel: MovieViewModel
+
+
+    override fun onMovieClick(position: Int) {
+        Log.d(TAG, "onMovieClick: $position")
+        Toast.makeText(applicationContext, "movie position is $position", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onMovieLongClick(position: Int) {
+        Log.d(TAG, "onMovieLongClick: $position")
+        Toast.makeText(applicationContext, "movie position is $position", Toast.LENGTH_LONG).show()
+
+        intent = YouTubeIntents.createPlayVideoIntentWithOptions(this, "Y_JGZTlUbZg", true, false)
+        startActivity(intent)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                SELECT_VIDEO_REQUEST -> {
+                    intent = YouTubeIntents.createUploadIntent(this, data!!.data)
+                    startActivity(intent)
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

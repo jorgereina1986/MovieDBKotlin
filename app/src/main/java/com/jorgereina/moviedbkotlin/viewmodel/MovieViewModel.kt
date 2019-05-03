@@ -86,14 +86,22 @@ class MovieViewModel : ViewModel() {
         }
     }
 
-//    fun getMovieUrl(position: String): String {
-//
-//        CoroutineScope(Dispatchers.Main).launch {
-//            val movieUrlRequest = movieService.getMovieInfoAsync(position, BuildConfig.TMDB_API_KEY)
-//        }
-//
-//        return movieUrl
-//    }
+    fun getMovieUrl(id: String): MutableLiveData<String> {
+        CoroutineScope(Dispatchers.Main).launch {
+            val movieUrlRequest = movieService.getMovieUrlAsync(id, BuildConfig.TMDB_API_KEY)
+
+
+            try {
+                val response = movieUrlRequest.await()
+                movieUrl.value = response.videos[0].key
+            } catch (e: Exception) {
+                Log.d(TAG, e.message)
+            } catch (e: HttpException) {
+                Log.d(TAG, e.message)
+            }
+        }
+        return movieUrl
+    }
 
     private suspend fun getListResponse(movieRequest: Deferred<MovieResponse>, movies: MutableLiveData<List<Movie>>) {
         try {

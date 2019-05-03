@@ -1,7 +1,6 @@
 package com.jorgereina.moviedbkotlin.ui
 
 import android.app.Activity
-import android.app.Dialog
 import android.app.SearchManager
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -9,24 +8,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.Menu
-import android.view.View
-import android.view.Window
 import android.widget.Toast
-import android.widget.VideoView
 import com.google.android.youtube.player.YouTubeIntents
-import com.google.android.youtube.player.YouTubePlayerView
-
 import com.jorgereina.moviedbkotlin.R
-import com.jorgereina.moviedbkotlin.data.Category
 import com.jorgereina.moviedbkotlin.data.Movie
 import com.jorgereina.moviedbkotlin.viewmodel.MovieViewModel
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.video_dialog.*
+
 
 class MainActivity : AppCompatActivity(), CategoriesFragment.OnMovieSelectedListener {
 
@@ -37,6 +27,7 @@ class MainActivity : AppCompatActivity(), CategoriesFragment.OnMovieSelectedList
     private var searchMovies = ArrayList<Movie>()
     private lateinit var adapter: CategoryAdapter
     private lateinit var viewModel: MovieViewModel
+    private lateinit var videoId: String
 
 
     override fun onMovieClick(position: Int) {
@@ -44,12 +35,17 @@ class MainActivity : AppCompatActivity(), CategoriesFragment.OnMovieSelectedList
         Toast.makeText(applicationContext, "movie position is $position", Toast.LENGTH_LONG).show()
     }
 
-    override fun onMovieLongClick(position: Int) {
-        Log.d(TAG, "onMovieLongClick: $position")
-        Toast.makeText(applicationContext, "movie position is $position", Toast.LENGTH_LONG).show()
+    override fun onMovieLongClick(id: Int) {
+        Log.d(TAG, "onMovieLongClick: $id")
+        Toast.makeText(applicationContext, "movie position is $id", Toast.LENGTH_LONG).show()
 
-        intent = YouTubeIntents.createPlayVideoIntentWithOptions(this, "Y_JGZTlUbZg", true, false)
-        startActivity(intent)
+        viewModel.getMovieUrl(id.toString()).observe(this, Observer { q ->
+//            videoId = q!!
+            Log.d(TAG, "onMovieLongClick: $q")
+
+            val bigintent = YouTubeIntents.createPlayVideoIntentWithOptions(this, q, true, false)
+            startActivity(bigintent)
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

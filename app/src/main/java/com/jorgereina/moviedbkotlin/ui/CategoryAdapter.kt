@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.jorgereina.moviedbkotlin.R
 import com.jorgereina.moviedbkotlin.data.Category
-import com.jorgereina.moviedbkotlin.data.Movie
 import com.jorgereina.moviedbkotlin.viewmodel.MovieViewModel
 import kotlinx.android.synthetic.main.child_rv_item.view.*
 

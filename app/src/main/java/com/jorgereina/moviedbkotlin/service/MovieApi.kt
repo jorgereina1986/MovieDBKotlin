@@ -22,6 +22,36 @@ interface MovieApi {
     fun getUpcomingMovies(@Query("api_key") apiKey: String): Deferred<MovieResponse>
 
     //https://api.themoviedb.org/3/movie/299534/videos?api_key=fe321b50d58f46c550723750263ad677&language=en-US
+
+
+    /**
+     * {
+    "id": 299537,
+    "results": [
+        {
+        "id": "5c8ad92b9251415249c0b099",
+        "iso_639_1": "en",
+        "iso_3166_1": "US",
+        "key": "Y_JGZTlUbZg",
+        "name": "“Born Free” TV Spot",
+        "site": "YouTube",
+        "size": 1080,
+        "type": "Teaser"
+        },
+        {
+        "id": "5c8ad94d9251410ce2c3d039",
+        "iso_639_1": "en",
+        "iso_3166_1": "US",
+        "key": "NCoPycawxUk",
+        "name": "\"Big Game\" TV Spot",
+        "site": "YouTube",
+        "size": 1080,
+        "type": "Teaser"
+        }
+    ]
+
+     */
+
     @GET("movie/{id}/videos?language=en-US")
-    fun getMovieInfoAsync(@Path("id") id: String, @Query("api_key") apiKey: String): Deferred<VideoResponse>
+    fun getMovieUrlAsync(@Path("id") id: String, @Query("api_key") apiKey: String): Deferred<VideoResponse>
 }

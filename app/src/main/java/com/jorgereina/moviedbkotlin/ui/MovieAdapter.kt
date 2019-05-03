@@ -52,7 +52,7 @@ class MovieAdapter internal constructor
         }
 
         override fun onLongClick(v: View?): Boolean {
-            listener.onMovieLongClick(adapterPosition)
+            listener.onMovieLongClick(movies[adapterPosition].id)
             return true
         }
 
